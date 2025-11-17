@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
@@ -5,18 +6,53 @@
 		<script src="beep.js"></script>
 		<script>
 			const synth = window.speechSynthesis;
-			function debug_voice() {
+			function random_swedish_voice() {
+				const voices = speechSynthesis.getVoices()
+				let swedish = []
+				for (const voice of voices) {
+					if (voice.lang == "sv") {
+						swedish.push(voice)
+					}
+				}
+				return swedish[Math.floor(Math.random() * swedish.length)];
+			}
+			function best_voice() {
 				const voices = speechSynthesis.getVoices()
 				for (const voice of voices) {
 					if (voice.lang == "sv") {
-						console.debug(voice.name + " " + voice.lang)
+						if (voice.name == "Swedish+Robosoft5") {
+							return voice
+						}
 					}
 				}
+				console.log("Did not find preferred voice!")
+				return undefined
 			}
+			function new_voice() {
+				swedish_voice = random_swedish_voice()
+			}
+			function voice_init() {
+				if (swedish_voice === undefined) {
+					swedish_voice = best_voice()
+				}
+				if (swedish_voice === undefined) {
+					swedish_voice = random_swedish_voice()
+				}
+			}
+			let swedish_voice
 			window.addEventListener("keydown", (e) => {
-				debug_voice()
 				let s = ""
-				if (e.code == "BracketLeft") {
+				if (e.code == "Enter") {
+					swedish_voice = best_voice()
+					console.log(swedish_voice.name)
+					return
+				}
+				else if (e.code == "Space") {
+					new_voice()
+					console.log(swedish_voice.name)
+					return
+				}
+				else if (e.code == "BracketLeft") {
 					s = "Å"
 				}
 				else if (e.code == "Quote") {
@@ -44,8 +80,10 @@
 				}
 				div.style.color = fg
 				div.style.backgroundColor = bg
-				beep()
+
+				voice_init()
 				const utter = new SpeechSynthesisUtterance(s)
+				utter.voice = swedish_voice
 				synth.speak(utter)
 			})
 		</script>
