@@ -4,7 +4,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script src="beep.js"></script>
 		<script>
+			const synth = window.speechSynthesis;
+			function debug_voice() {
+				const voices = speechSynthesis.getVoices()
+				for (const voice of voices) {
+					if (voice.lang == "sv") {
+						console.debug(voice.name + " " + voice.lang)
+					}
+				}
+			}
 			window.addEventListener("keydown", (e) => {
+				debug_voice()
 				let s = ""
 				if (e.code == "BracketLeft") {
 					s = "Å"
@@ -35,6 +45,8 @@
 				div.style.color = fg
 				div.style.backgroundColor = bg
 				beep()
+				const utter = new SpeechSynthesisUtterance(s)
+				synth.speak(utter)
 			})
 		</script>
 		<style type="text/css">
