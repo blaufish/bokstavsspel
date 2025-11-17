@@ -22,6 +22,17 @@
 				}
 				let div = document.getElementById("div")
 				div.innerHTML = s;
+				let fg
+				let bg
+				if (div.style.color == "white") {
+					fg = "black"
+					bg = "white"
+				} else {
+					fg = "white"
+					bg = "black"
+				}
+				div.style.color = fg
+				div.style.backgroundColor = bg
 			})
 		</script>
 		<style type="text/css">
@@ -32,7 +43,8 @@
 
         #div {
             min-height: 100%;
-	    background-color: red;
+	    background-color: white;
+	    color: black;
 	    font-size: 40vw;
 	    text-align: center;
         }
