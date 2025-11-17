@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script>
+			window.addEventListener("keydown", (e) => {
+				let s = ""
+				if (e.code == "BracketLeft") {
+					s = "Å"
+				}
+				else if (e.code == "Quote") {
+					s = "Ä"
+				}
+				else if (e.code == "Semicolon") {
+					s = "Ö"
+				}
+				else if (e.code.startsWith("Key")) {
+					s = e.code.replace("Key", "")
+				}
+				else {
+					return
+				}
+				let div = document.getElementById("div")
+				div.innerHTML = s;
+			})
+		</script>
+		<style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #div {
+            min-height: 100%;
+	    background-color: red;
+	    font-size: 40vw;
+	    text-align: center;
+        }
+		 </style>
+	</head>
+	<body>
+		<div id="div">A</div>
+	</body>
+</html>
