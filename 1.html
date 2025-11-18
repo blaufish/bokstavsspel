@@ -5,6 +5,29 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script>
 			const synth = window.speechSynthesis;
+
+			let swedish_voice
+			let debounce_timer
+			let debounce_value
+			function debounce(s) {
+				let update = false
+				update |= (debounce_timer === undefined)
+				update |= (debounce_value === undefined)
+				update |= (debounce_value != s)
+				now = new Date()
+				if (!update) {
+					let duration = now.getTime() - debounce_timer.getTime()
+					if (duration > 1000) {
+						update = true
+					}
+				}
+				if (update) {
+					debounce_timer = now
+					debounce_value = s
+				}
+				return update
+			}
+
 			function random_swedish_voice() {
 				const voices = speechSynthesis.getVoices()
 				let swedish = []
@@ -38,7 +61,6 @@
 					swedish_voice = random_swedish_voice()
 				}
 			}
-			let swedish_voice
 			window.addEventListener("keydown", (e) => {
 				let s = ""
 				if (e.code == "Enter") {
@@ -68,6 +90,10 @@
 				}
 				else {
 					console.debug("Ignore: " + e.code)
+					return
+				}
+				if (!debounce(s)) {
+					console.debug("Debounced: " + s)
 					return
 				}
 				let div = document.getElementById("div")
