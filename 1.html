@@ -3,7 +3,6 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script src="beep.js"></script>
 		<script>
 			const synth = window.speechSynthesis;
 			function random_swedish_voice() {
@@ -64,7 +63,11 @@
 				else if (e.code.startsWith("Key")) {
 					s = e.code.replace("Key", "")
 				}
+				else if (e.code.startsWith("Digit")) {
+					s = e.code.replace("Digit", "")
+				}
 				else {
+					console.debug("Ignore: " + e.code)
 					return
 				}
 				let div = document.getElementById("div")
