@@ -9,6 +9,7 @@
 			let swedish_voice
 			let debounce_timer
 			let debounce_value
+
 			function debounce(s) {
 				let update = false
 				update |= (debounce_timer === undefined)
@@ -28,31 +29,52 @@
 				return update
 			}
 
-			function random_swedish_voice() {
+			function get_swedish_voice(mode) {
 				const voices = speechSynthesis.getVoices()
 				let swedish = []
+				let i = 0
+				let current = 0
 				for (const voice of voices) {
-					if (voice.lang == "sv") {
-						swedish.push(voice)
+					if (voice.lang != "sv") {
+						continue
 					}
-				}
-				return swedish[Math.floor(Math.random() * swedish.length)];
-			}
-			function best_voice() {
-				const voices = speechSynthesis.getVoices()
-				for (const voice of voices) {
-					if (voice.lang == "sv") {
-						if (voice.name == "Swedish+Robosoft5") {
-							return voice
+					swedish.push(voice)
+					i++
+					if (swedish_voice !== undefined) {
+						if (voice.name == swedish_voice.name) {
+							current = i - 1
 						}
 					}
+					if (mode != "best") {
+						continue
+					}
+					if (voice.name == "Swedish+Robosoft5") {
+						return voice
+					}
 				}
-				console.log("Did not find preferred voice!")
-				return undefined
+				if (mode == "best") {
+					// should have returned already
+					console.log("Did not find preferred voice!")
+				}
+				let index = 0
+				if (mode == "random") {
+					index = Math.floor(Math.random() * swedish.length);
+				}
+				else if (mode == "+") {
+					index = (current + 1) % swedish.length
+				}
+				else if (mode == "-") {
+					index = (current + swedish.length - 1) % swedish.length
+				}
+				return swedish[index]
 			}
-			function new_voice() {
-				swedish_voice = random_swedish_voice()
+
+			function choose_voice(mode) {
+				swedish_voice = get_swedish_voice(mode)
+				console.log(swedish_voice.name)
+				utter_voice_name()
 			}
+
 			function voice_init() {
 				if (swedish_voice === undefined) {
 					swedish_voice = best_voice()
@@ -61,16 +83,29 @@
 					swedish_voice = random_swedish_voice()
 				}
 			}
+
+			function utter_voice_name() {
+				const utter = new SpeechSynthesisUtterance(swedish_voice.name)
+				utter.voice = swedish_voice
+				synth.speak(utter)
+			}
+
 			window.addEventListener("keydown", (e) => {
 				let s = ""
 				if (e.code == "Enter") {
-					swedish_voice = best_voice()
-					console.log(swedish_voice.name)
+					choose_voice("best")
 					return
 				}
 				else if (e.code == "Space") {
-					new_voice()
-					console.log(swedish_voice.name)
+					choose_voice("random")
+					return
+				}
+				else if (e.code == "ArrowUp") {
+					choose_voice("+")
+					return
+				}
+				else if (e.code == "ArrowDown") {
+					choose_voice("-")
 					return
 				}
 				else if (e.code == "BracketLeft") {
