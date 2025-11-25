@@ -95,6 +95,10 @@
 			}, "500")
 
 			window.addEventListener("keydown", (e) => {
+				if (!debounce(e.code)) {
+					console.debug("Debounced: " + e.code)
+					return
+				}
 				let s = ""
 				if (e.code == "Enter") {
 					choose_voice("best")
@@ -129,10 +133,6 @@
 				}
 				else {
 					console.debug("Ignore: " + e.code)
-					return
-				}
-				if (!debounce(s)) {
-					console.debug("Debounced: " + s)
 					return
 				}
 				let div = document.getElementById("div")
