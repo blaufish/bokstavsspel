@@ -90,6 +90,10 @@
 				synth.speak(utter)
 			}
 
+			setTimeout(() => {
+				voice_init()
+			}, "500")
+
 			window.addEventListener("keydown", (e) => {
 				let s = ""
 				if (e.code == "Enter") {
