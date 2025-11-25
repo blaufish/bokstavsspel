@@ -77,10 +77,10 @@
 
 			function voice_init() {
 				if (swedish_voice === undefined) {
-					swedish_voice = best_voice()
+					choose_voice("best")
 				}
 				if (swedish_voice === undefined) {
-					swedish_voice = random_swedish_voice()
+					choose_voice("random")
 				}
 			}
 
