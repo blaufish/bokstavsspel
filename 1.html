@@ -39,6 +39,30 @@
 				return s
 			}
 
+			function display(s) {
+				let div = document.getElementById("div")
+				div.innerHTML = display_format(s);
+				let fg
+				let bg
+				if (div.style.color == "white") {
+					fg = "black"
+					bg = "white"
+				} else {
+					fg = "white"
+					bg = "black"
+				}
+				div.style.color = fg
+				div.style.backgroundColor = bg
+			}
+
+			function redisplay() {
+				let div = document.getElementById("div")
+				s = div.innerHTML
+				c = s.charAt(0)
+				s = c.toUpperCase()
+				display(s)
+			}
+
 			function debounce(s) {
 				let update = false
 				update |= (debounce_timer === undefined)
@@ -152,6 +176,7 @@
 				}
 				else if (e.code == "ArrowLeft") {
 					displaymode_cycle()
+					redisplay()
 					return
 				}
 				else if (e.code == "BracketLeft") {
@@ -179,19 +204,7 @@
 				utter.voice = swedish_voice
 				synth.speak(utter)
 
-				let div = document.getElementById("div")
-				div.innerHTML = display_format(s);
-				let fg
-				let bg
-				if (div.style.color == "white") {
-					fg = "black"
-					bg = "white"
-				} else {
-					fg = "white"
-					bg = "black"
-				}
-				div.style.color = fg
-				div.style.backgroundColor = bg
+				display(s)
 
 			})
 		</script>
