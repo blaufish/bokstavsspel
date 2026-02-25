@@ -9,6 +9,32 @@
 			let swedish_voice
 			let debounce_timer
 			let debounce_value
+			let displaymode
+
+			function displaymode_cycle() {
+				if (displaymode === undefined) {
+					displaymode = "Uppercase"
+				}
+				else if (displaymode == "Uppercase") {
+					displaymode = "Lowercase"
+				}
+				else if (displaymode == "Lowercase") {
+					displaymode = "Both"
+				}
+				else if (displaymode == "Both") {
+					displaymode = "Uppercase"
+				}
+			}
+
+			function display_format(s) {
+				if (displaymode == "Lowercase") {
+					return s.toLowerCase()
+				}
+				if (displaymode == "Both") {
+					return s + " " + s.toLowerCase()
+				}
+				return s
+			}
 
 			function debounce(s) {
 				let update = false
@@ -71,6 +97,10 @@
 
 			function choose_voice(mode) {
 				swedish_voice = get_swedish_voice(mode)
+				if (swedish_voice === undefined) {
+					console.log("Unable to get voice")
+					return
+				}
 				console.log(swedish_voice.name)
 				utter_voice_name()
 			}
@@ -91,6 +121,7 @@
 			}
 
 			setTimeout(() => {
+				displaymode_cycle()
 				voice_init()
 			}, "500")
 
@@ -116,6 +147,10 @@
 					choose_voice("-")
 					return
 				}
+				else if (e.code == "ArrowLeft") {
+					displaymode_cycle()
+					return
+				}
 				else if (e.code == "BracketLeft") {
 					s = "Å"
 				}
@@ -135,8 +170,14 @@
 					console.debug("Ignore: " + e.code)
 					return
 				}
+
+				voice_init()
+				const utter = new SpeechSynthesisUtterance(s)
+				utter.voice = swedish_voice
+				synth.speak(utter)
+
 				let div = document.getElementById("div")
-				div.innerHTML = s;
+				div.innerHTML = display_format(s);
 				let fg
 				let bg
 				if (div.style.color == "white") {
@@ -149,10 +190,6 @@
 				div.style.color = fg
 				div.style.backgroundColor = bg
 
-				voice_init()
-				const utter = new SpeechSynthesisUtterance(s)
-				utter.voice = swedish_voice
-				synth.speak(utter)
 			})
 		</script>
 		<style type="text/css">
