@@ -31,6 +31,9 @@
 					return s.toLowerCase()
 				}
 				if (displaymode == "Both") {
+					if (Number.isInteger(s)) {
+						return s
+					}
 					return s + " " + s.toLowerCase()
 				}
 				return s
